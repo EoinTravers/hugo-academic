@@ -1,5 +1,4 @@
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,9 +11,9 @@
   {{ $superuser_username := "" }}
   {{ $superuser_role := "" }}
   {{ range first 1 (where (where site.Pages "Section" "authors") "Params.superuser" true) }}
-    {{ $superuser_name = .Params.name }}
-    {{ $superuser_username = path.Base (path.Split .Path).Dir }}
-    {{ $superuser_role = .Params.role }}
+  {{ $superuser_name = .Params.name }}
+  {{ $superuser_username = path.Base (path.Split .Path).Dir }}
+  {{ $superuser_role = .Params.role }}
   {{ end }}
   {{ $scr.Set "superuser_username" $superuser_username }}{{/* Set superuser globally for page_author.html. */}}
 
@@ -23,15 +22,15 @@
   {{/* Generate page description. */}}
   {{ $desc := "" }}
   {{ if .Params.summary }}
-    {{ $desc = .Params.summary }}
+  {{ $desc = .Params.summary }}
   {{ else if .Params.abstract }}
-    {{ $desc = .Params.abstract }}
+  {{ $desc = .Params.abstract }}
   {{ else if .IsPage }}
-    {{ $desc = .Summary }}
+  {{ $desc = .Summary }}
   {{ else if site.Params.description }}
-    {{ $desc = site.Params.description }}
+  {{ $desc = site.Params.description }}
   {{ else }}
-    {{ $desc = $superuser_role }}
+  {{ $desc = $superuser_role }}
   {{ end }}
   <meta name="description" content="{{ $desc }}">
 
@@ -158,13 +157,16 @@
   {{ else if site.Params.sharing_image }}
   {{ $og_image = printf "img/%s" site.Params.sharing_image | absURL }}
   {{ else if $has_logo }}
-  {{ $og_image = (partial "functions/get_logo" (dict "constraint" "fit" "size" 300)).Permalink }}
+  {{ $og_image = (partial "functions/get_logo" (dict "constraint" "fit" "size" 300).RelPermalink) }}
   {{ $twitter_card = "summary" }}
   {{ else if site.Params.avatar }}
   {{ $og_image = (printf "img/%s" site.Params.avatar) | absURL }}
   {{ $twitter_card = "summary" }}
   {{ else }}
-  {{ $og_image = (partial "functions/get_icon" 512).Permalink }}
+  <!-- {{ $og_image = (partial "functions/get_icon" 300).RelPermalink }} -->
+  <!-- I shouldn't need to hardcode this -->
+  <!-- {{ $og_image = (partial "functions/get_icon" 300).RelPermalink }} -->
+  {{ $og_image = "http://eointravers.com/images/icon_hu0dcd2e3f220915d0489b166ee5e4625c_3555_300x300_fill_lanczos_center_2.png"}}
   {{ $twitter_card = "summary" }}
   {{ end }}
   {{ $scr.Set "og_image" $og_image }}{{/* Set `og_image` globally for `rss.xml`. */}}
@@ -205,29 +207,31 @@
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       crossorigin="anonymous"></script>
 
-  <script type="text/javascript" async
-          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-  </script>
+  <!-- <script type="text/javascript" async
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+       </script>
 
-  <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-          tex2jax: {
-              inlineMath: [['$','$'], ['\\(','\\)']],
-              displayMath: [['$$','$$'], ['\[','\]']],
-              processEscapes: true,
-              processEnvironments: true,
-              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-              TeX: { equationNumbers: { autoNumber: "AMS" },
-                     extensions: ["AMSmath.js", "AMSsymbols.js"] }
-          }
-      });
-  </script>
 
+       <script type="text/x-mathjax-config">
+       MathJax.Hub.Config({
+       tex2jax: {
+       inlineMath: [['$','$'], ['\\(','\\)']],
+       displayMath: [['$$','$$'], ['\[','\]']],
+       processEscapes: true,
+       processEnvironments: true,
+       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+       TeX: { equationNumbers: { autoNumber: "AMS" },
+       extensions: ["AMSmath.js", "AMSsymbols.js"] }
+       }
+       });
+       </script>
+  -->
+  {{ if ne $.Params.toggle "false"}}
   <script>
       function toggler(){
-          let btn = $('.language-python').parent()
-                                         .prepend('<button>Toggle Code</button>')
-                                         .children('button');
+          let btn = $('.language-python, .language-r').parent()
+                                                      .prepend('<button>Toggle Code</button>')
+                                                      .children('button');
           btn.on('click', function(e){
               let tgt = e.currentTarget;
               $(tgt).parent().children('code').toggle()
@@ -235,6 +239,7 @@
       }
       $(window).on('load', toggler)
   </script>
+  {{ end }}
   {{ end }}
 
   <title>{{ if not .IsHome }}{{ .Params.name | default .Title }} | {{ end }}{{ site.Title }}</title>
