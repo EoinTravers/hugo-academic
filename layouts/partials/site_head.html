@@ -229,10 +229,12 @@
   {{ if ne $.Params.toggle "false"}}
   <script>
       function toggler(){
-          let btn = $('.language-python, .language-r').parent()
-                                                      .prepend('<button>Toggle Code</button>')
-                                                      .children('button');
-          btn.on('click', function(e){
+          let jupyter_code = $('.language-python, .language-r').parent();
+          let rstudio_code = $('.r');
+          let buttons = jupyter_code.add(rstudio_code)
+                                    .prepend('<button>Toggle Code</button>')
+                                    .children('button');
+          buttons.on('click', function(e){
               let tgt = e.currentTarget;
               $(tgt).parent().children('code').toggle()
           })
