@@ -231,7 +231,8 @@
       function toggler(){
           let jupyter_code = $('.language-python, .language-r').parent();
           let rstudio_code = $('.r');
-          let buttons = jupyter_code.add(rstudio_code)
+          let generic_code = $('pre');
+          let buttons = jupyter_code.add(rstudio_code).add(generic_code)
                                     .prepend('<button>Toggle Code</button>')
                                     .children('button');
           buttons.on('click', function(e){
