@@ -2,3 +2,40 @@
 {{/* Instead, create a `layouts/partials/custom_head.html` file in your site and add your code to it. */}}
 
 {{/* This partial is included in `themes/academic/layouts/partials/site_head.html`. */}}
+
+{{ if eq $.Params.source "jupyter"}}
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    crossorigin="anonymous"></script>
+
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\[','\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                   extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+    });
+</script>
+
+<script>
+    function toggler(){
+        let btn = $('.language-python').parent()
+                                       .prepend('<button>Toggle Code</button>')
+                                       .children('button');
+        btn.on('click', function(e){
+            let tgt = e.currentTarget;
+            $(tgt).parent().children('code').toggle()
+        })
+    }
+    $(window).on('load', toggler)
+</script>
+{{ end }}
