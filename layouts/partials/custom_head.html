@@ -3,7 +3,10 @@
 
 {{/* This partial is included in `themes/academic/layouts/partials/site_head.html`. */}}
 
-{{ if eq $.Params.source "jupyter"}}
+{{ if or (eq $.Params.source "jupyter") (if in $.Params.plugins "toggle-code") }}
+<!-- TODO: Depreciate $.Params.source
+     and update markdown files accordingly
+-->
 <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"
     crossorigin="anonymous"></script>
@@ -13,29 +16,34 @@
 </script>
 
 <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [['$','$'], ['\\(','\\)']],
-            displayMath: [['$$','$$'], ['\[','\]']],
-            processEscapes: true,
-            processEnvironments: true,
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            TeX: { equationNumbers: { autoNumber: "AMS" },
-                   extensions: ["AMSmath.js", "AMSsymbols.js"] }
-        }
-    });
+ MathJax.Hub.Config({
+     tex2jax: {
+         inlineMath: [['$','$'], ['\\(','\\)']],
+         displayMath: [['$$','$$'], ['\[','\]']],
+         processEscapes: true,
+         processEnvironments: true,
+         skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+         TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+     }
+ });
 </script>
 
 <script>
-    function toggler(){
-        let btn = $('.language-python').parent()
-                                       .prepend('<button>Toggle Code</button>')
-                                       .children('button');
-        btn.on('click', function(e){
-            let tgt = e.currentTarget;
-            $(tgt).parent().children('code').toggle()
-        })
-    }
-    $(window).on('load', toggler)
+ function toggler(){
+     let btn = $('.language-python, .language-r')
+         .parent()
+         .prepend('<button>Toggle Code</button>')
+         .children('button');
+     btn.on('click', function(e){
+         let tgt = e.currentTarget;
+         $(tgt).parent().children('code').toggle()
+     })
+ }
+ $(window).on('load', toggler)
 </script>
+{{ end }}
+
+{{ if in $.Params.plugins "pagedtable" }}
+  <script type="text/javascript" src="/js/vendor/pagedtable.js"></script>
 {{ end }}
